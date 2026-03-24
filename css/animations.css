@@ -1,0 +1,501 @@
+/* =============================================
+   job.bar — Animations CSS
+   ============================================= */
+
+/* Particle Canvas BG for auth */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    33% {
+        transform: translateY(-15px) rotate(5deg);
+    }
+
+    66% {
+        transform: translateY(8px) rotate(-3deg);
+    }
+}
+
+/* Glow effects */
+.glow-text {
+    text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+}
+
+.glow-border {
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3), 0 0 30px rgba(99, 102, 241, 0.1);
+}
+
+/* Number counter animation */
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade animations */
+.fade-in {
+    animation: fadeIn 0.4s ease;
+}
+
+.fade-slide-up {
+    animation: fadeSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Slide animations */
+.slide-in-right {
+    animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Bounce in */
+.bounce-in {
+    animation: bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes bounceIn {
+    from {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Stagger animations for lists */
+.stagger-item:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.stagger-item:nth-child(2) {
+    animation-delay: 0.10s;
+}
+
+.stagger-item:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.stagger-item:nth-child(4) {
+    animation-delay: 0.20s;
+}
+
+.stagger-item:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.stagger-item:nth-child(6) {
+    animation-delay: 0.30s;
+}
+
+.stagger-item:nth-child(7) {
+    animation-delay: 0.35s;
+}
+
+.stagger-item:nth-child(8) {
+    animation-delay: 0.40s;
+}
+
+.stagger-item:nth-child(9) {
+    animation-delay: 0.45s;
+}
+
+.stagger-item:nth-child(10) {
+    animation-delay: 0.50s;
+}
+
+/* Typing animation */
+.typing-cursor::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+    color: var(--accent);
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Progress bars */
+.progress-bar {
+    height: 6px;
+    background: var(--surface);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: progressShimmer 2s linear infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg, var(--accent) 25%, var(--accent-2) 50%, var(--accent) 75%);
+}
+
+@keyframes progressShimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Ripple effect */
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: inherit;
+    transform: scale(0);
+    opacity: 1;
+    transition: transform 0.5s, opacity 0.5s;
+}
+
+.ripple:active::after {
+    transform: scale(2);
+    opacity: 0;
+}
+
+/* Hero gradient animation */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.gradient-animated {
+    background: linear-gradient(-45deg, #6366f1, #8b5cf6, #06b6d4, #10b981);
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Notification bell shake */
+@keyframes bellShake {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(15deg);
+    }
+
+    40% {
+        transform: rotate(-10deg);
+    }
+
+    60% {
+        transform: rotate(8deg);
+    }
+
+    80% {
+        transform: rotate(-5deg);
+    }
+}
+
+.bell-shake {
+    animation: bellShake 0.6s ease;
+}
+
+/* Status badges pulse */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-applied {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--accent);
+}
+
+.status-viewed {
+    background: rgba(6, 182, 212, 0.15);
+    color: var(--accent-3);
+}
+
+.status-shortlisted {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning);
+}
+
+.status-interview {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+
+.status-rejected {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+}
+
+.status-offer {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.status-applied .status-dot {
+    background: var(--accent);
+}
+
+.status-viewed .status-dot {
+    background: var(--accent-3);
+}
+
+.status-shortlisted .status-dot {
+    background: var(--warning);
+}
+
+.status-interview .status-dot {
+    background: var(--success);
+}
+
+.status-rejected .status-dot {
+    background: var(--danger);
+}
+
+.status-offer .status-dot {
+    background: var(--success);
+}
+
+/* Card hover effects */
+.card-hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Scan line effect for AI processing */
+@keyframes scanLine {
+    0% {
+        top: 0;
+    }
+
+    100% {
+        top: 100%;
+    }
+}
+
+.ai-scan-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.ai-scan-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: scanLine 2s linear infinite;
+}
+
+/* Upload zone animations */
+.upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.upload-zone:hover,
+.upload-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.upload-zone:hover svg {
+    transform: translateY(-4px);
+}
+
+.upload-zone svg {
+    transition: transform 0.3s;
+    color: var(--text-muted);
+}
+
+.upload-text {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.upload-subtext {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+/* AI Typing dots */
+.ai-typing {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0 var(--radius) var(--radius) var(--radius);
+    width: fit-content;
+}
+
+.ai-typing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    animation: typingBounce 1.2s ease-in-out infinite;
+}
+
+.ai-typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.ai-typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+
+    0%,
+    60%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+
+    30% {
+        transform: translateY(-6px);
+        opacity: 1;
+    }
+}
+
+/* Stars in background */
+.stars-bg {
+    background: radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+}
+
+/* Profile avatar gradient */
+.profile-avatar-big {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: white;
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+/* Mobile sidebar overlay */
+@media (max-width: 768px) {
+    .sidebar-overlay.active {
+        display: block;
+    }
+}

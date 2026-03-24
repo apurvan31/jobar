@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>job.bar — AI-Powered Job Search & Auto-Apply Platform</title>
+  <meta name="description" content="job.bar: Upload your resume, get matched with real jobs, generate tailored resumes and cover letters, and track your applications — all powered by AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+</head>
+<body>
+  <!-- Auth Screen -->
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-bg">
+      <div class="auth-orb orb-1"></div>
+      <div class="auth-orb orb-2"></div>
+      <div class="auth-orb orb-3"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    <div class="auth-container">
+      <div class="auth-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">job<span class="logo-accent">.bar</span></span>
+      </div>
+      <div class="auth-card glassmorphism">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="login-tab" onclick="switchAuthTab('login')">Sign In</button>
+          <button class="auth-tab" id="signup-tab" onclick="switchAuthTab('signup')">Sign Up</button>
+          <button class="auth-tab" id="reset-tab" onclick="switchAuthTab('reset')" style="display:none">Reset</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="auth-form">
+          <h2 class="auth-title">Welcome back</h2>
+          <p class="auth-subtitle">Your AI job search assistant is ready</p>
+          <button class="btn-google" onclick="handleGoogleAuth()">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Continue with Google
+          </button>
+          <div class="auth-divider"><span>or</span></div>
+          <div class="form-group">
+            <label>Email address</label>
+            <input type="email" id="login-email" placeholder="you@example.com" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="login-password" placeholder="••••••••" class="form-input" />
+          </div>
+          <button class="btn-primary btn-full" onclick="handleLogin()">
+            <span>Sign In</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <p class="auth-footer">Don't have an account? <a href="#" onclick="switchAuthTab('signup')">Sign up free</a> · <a href="#" onclick="switchAuthTab('reset')">Forgot password?</a></p>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signup-form" class="auth-form hidden">
+          <h2 class="auth-title">Get started free</h2>
+          <p class="auth-subtitle">AI that finds and applies to jobs for you</p>
+          <button class="btn-google" onclick="handleGoogleAuth()">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Sign up with Google
+          </button>
+          <div class="auth-divider"><span>or</span></div>
+          <div class="form-group">
+            <label>Full name</label>
+            <input type="text" id="signup-name" placeholder="John Doe" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>Email address</label>
+            <input type="email" id="signup-email" placeholder="you@example.com" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="signup-password" placeholder="Create a strong password" class="form-input" />
+          </div>
+          <button class="btn-primary btn-full" onclick="handleSignup()">
+            <span>Create Account</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <p class="auth-footer">Already have an account? <a href="#" onclick="switchAuthTab('login')">Sign in</a></p>
+        </div>
+
+        <!-- Password Reset Form -->
+        <div id="reset-form" class="auth-form hidden">
+          <h2 class="auth-title">Reset Password</h2>
+          <p class="auth-subtitle">We'll send you a reset link</p>
+          <div class="form-group">
+            <label>Email address</label>
+            <input type="email" id="reset-email" placeholder="you@example.com" class="form-input" />
+          </div>
+          <button class="btn-primary btn-full" onclick="handlePasswordReset()">
+            <span>Send Reset Link</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17H2a3 3 0 000 6h20V17z"/><path d="M2 17l10-10 10 10"/></svg>
+          </button>
+          <p class="auth-footer">Remember your password? <a href="#" onclick="switchAuthTab('login')">Sign in</a></p>
+        </div>
+      </div>
+      <p class="auth-trust">🔒 Trusted by 50,000+ job seekers · No spam · Cancel anytime</p>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="app hidden">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">job<span class="logo-accent">.bar</span></span>
+        <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" id="nav-home" onclick="navigateTo('home')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+          <span>Home</span>
+          <span class="nav-badge new">Live</span>
+        </a>
+        <a href="#" class="nav-item" id="nav-jobs" onclick="navigateTo('jobs')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+          <span>Job Feed</span>
+          <span class="nav-badge">247</span>
+        </a>
+        <a href="#" class="nav-item" id="nav-applications" onclick="navigateTo('applications')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          <span>Applications</span>
+          <span class="nav-badge">12</span>
+        </a>
+        <a href="#" class="nav-item" id="nav-resume" onclick="navigateTo('resume')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+          <span>Resume Lab</span>
+        </a>
+        <a href="#" class="nav-item" id="nav-cover" onclick="navigateTo('cover')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <span>Cover Letters</span>
+        </a>
+        <a href="#" class="nav-item" id="nav-prep" onclick="navigateTo('prep')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>
+          <span>Interview Prep</span>
+        </a>
+        <a href="#" class="nav-item" id="nav-saved" onclick="navigateTo('saved')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+          <span>Saved Jobs</span>
+          <span class="nav-badge" id="saved-badge">0</span>
+        </a>
+        <a href="#" class="nav-item" id="nav-autoapply" onclick="navigateTo('autoapply')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span>Auto Apply</span>
+          <span class="nav-badge new">AI</span>
+        </a>
+        <a href="#" class="nav-item" id="nav-salary" onclick="navigateTo('salary')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          <span>Salary Insights</span>
+        </a>
+        <a href="#" class="nav-item" id="nav-profile" onclick="navigateTo('profile')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-ai-status">
+          <div class="ai-pulse"></div>
+          <span>AI Engine Active</span>
+        </div>
+        <div class="sidebar-user" onclick="navigateTo('profile')">
+          <div class="user-avatar" id="sidebar-avatar">JD</div>
+          <div class="user-info">
+            <span class="user-name" id="sidebar-username">John Doe</span>
+            <span class="user-plan" style="color: var(--success); font-weight: 600;">Free Forever</span>
+          </div>
+          <button class="btn-logout" onclick="handleLogout()" title="Logout">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger" onclick="toggleSidebar()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="topbar-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" placeholder="Search jobs, companies, roles..." id="global-search" oninput="handleGlobalSearch(this.value)" />
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="topbar-btn theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+            <svg id="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg id="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          </button>
+          <button class="topbar-btn" onclick="showNotifications()" id="notif-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="notif-dot"></span>
+          </button>
+          <div class="topbar-avatar" onclick="navigateTo('profile')" id="topbar-avatar">JD</div>
+        </div>
+      </header>
+
+      <!-- Notifications Panel -->
+      <div class="notifications-panel hidden" id="notifications-panel">
+        <div class="notif-header">
+          <h3>Notifications</h3>
+          <button onclick="clearNotifications()">Clear all</button>
+        </div>
+        <div class="notif-list" id="notif-list"></div>
+      </div>
+
+      <!-- Pages -->
+      <div class="pages-container">
+        <!-- HOME PAGE -->
+        <div id="page-home" class="page active" data-page="home">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Good afternoon, <span id="greeting-name" class="gradient-text">John</span> 👋</h1>
+              <p class="page-subtitle">Your AI is actively scanning <strong>247 jobs</strong> matching your profile</p>
+            </div>
+            <button class="btn-primary" onclick="navigateTo('jobs')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              Browse All Jobs
+            </button>
+          </div>
+
+          <!-- Stats Row -->
+          <div class="stats-grid">
+            <div class="stat-card glassmorphism animate-in" style="--delay:0.1s">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+              </div>
+              <div class="stat-content">
+                <span class="stat-number" data-target="247">0</span>
+                <span class="stat-label">Jobs Matched</span>
+              </div>
+              <div class="stat-trend up">↑ 18 today</div>
+            </div>
+            <div class="stat-card glassmorphism animate-in" style="--delay:0.2s">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              </div>
+              <div class="stat-content">
+                <span class="stat-number" data-target="12">0</span>
+                <span class="stat-label">Applications Sent</span>
+              </div>
+              <div class="stat-trend up">↑ 3 this week</div>
+            </div>
+            <div class="stat-card glassmorphism animate-in" style="--delay:0.3s">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <div class="stat-content">
+                <span class="stat-number" data-target="5">0</span>
+                <span class="stat-label">Profile Views</span>
+              </div>
+              <div class="stat-trend up">↑ 2 new</div>
+            </div>
+            <div class="stat-card glassmorphism animate-in" style="--delay:0.4s">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div class="stat-content">
+                <span class="stat-number" data-target="2">0</span>
+                <span class="stat-label">Interviews Scheduled</span>
+              </div>
+              <div class="stat-trend up">This week</div>
+            </div>
+          </div>
+
+          <!-- Upload Resume CTA if not uploaded -->
+          <div id="resume-cta" class="resume-upload-cta glassmorphism animate-in hidden">
+            <div class="cta-content">
+              <div class="cta-icon">📄</div>
+              <div>
+                <h3>Upload your resume to get started</h3>
+                <p>Our AI will parse your resume and find matching jobs automatically</p>
+              </div>
+            </div>
+            <button class="btn-primary" onclick="navigateTo('resume')">Upload Resume →</button>
+          </div>
+
+          <!-- Two-column layout -->
+          <div class="home-grid">
+            <!-- Live Job Feed -->
+            <div class="home-section">
+              <div class="section-header">
+                <h2>🔴 Live Job Feed</h2>
+                <a href="#" onclick="navigateTo('jobs')" class="see-all">See all →</a>
+              </div>
+              <div id="home-job-feed" class="job-feed-mini">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Activity & Insights -->
+            <div class="home-aside">
+              <!-- Application Pipeline -->
+              <div class="aside-card glassmorphism">
+                <h3>Application Pipeline</h3>
+                <div class="pipeline-chart" id="pipeline-chart"></div>
+              </div>
+
+              <!-- AI Suggestions -->
+              <div class="aside-card glassmorphism ai-suggestions">
+                <div class="ai-badge">✨ AI Insights</div>
+                <h3>Smart Suggestions</h3>
+                <div id="ai-suggestions-list"></div>
+              </div>
+
+              <!-- Upcoming -->
+              <div class="aside-card glassmorphism">
+                <h3>📅 Upcoming</h3>
+                <div id="upcoming-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- JOBS PAGE -->
+        <div id="page-jobs" class="page" data-page="jobs">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Job Feed</h1>
+              <p class="page-subtitle">Real-time jobs matched to your profile · Updated every hour</p>
+            </div>
+            <div class="topbar-actions">
+              <button class="btn-secondary" onclick="refreshJobs()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="refresh-icon"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                Refresh
+              </button>
+              <button class="btn-primary" onclick="showUploadModal()">+ Upload Resume</button>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="filters-bar glassmorphism">
+            <div class="filter-group">
+              <label>Role</label>
+              <select id="filter-role" onchange="filterJobs()" class="filter-select">
+                <option value="">All Roles</option>
+                <option value="frontend">Frontend Developer</option>
+                <option value="backend">Backend Developer</option>
+                <option value="fullstack">Full Stack Developer</option>
+                <option value="data">Data Scientist</option>
+                <option value="ml">ML Engineer</option>
+                <option value="devops">DevOps Engineer</option>
+                <option value="designer">UI/UX Designer</option>
+                <option value="product">Product Manager</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Experience</label>
+              <select id="filter-exp" onchange="filterJobs()" class="filter-select">
+                <option value="">Any Level</option>
+                <option value="fresher">Fresher (0-1y)</option>
+                <option value="junior">Junior (1-3y)</option>
+                <option value="mid">Mid (3-5y)</option>
+                <option value="senior">Senior (5+y)</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Work Mode</label>
+              <select id="filter-mode" onchange="filterJobs()" class="filter-select">
+                <option value="">Any Mode</option>
+                <option value="remote">Remote</option>
+                <option value="hybrid">Hybrid</option>
+                <option value="onsite">On-site</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Location</label>
+              <select id="filter-location" onchange="filterJobs()" class="filter-select">
+                <option value="">Any Location</option>
+                <option value="bangalore">Bangalore</option>
+                <option value="mumbai">Mumbai</option>
+                <option value="delhi">Delhi NCR</option>
+                <option value="hyderabad">Hyderabad</option>
+                <option value="pune">Pune</option>
+                <option value="chennai">Chennai</option>
+                <option value="usa">USA</option>
+                <option value="uk">UK</option>
+                <option value="remote">Remote</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Platform</label>
+              <select id="filter-platform" onchange="filterJobs()" class="filter-select">
+                <option value="">All Platforms</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="indeed">Indeed</option>
+                <option value="naukri">Naukri</option>
+                <option value="wellfound">Wellfound</option>
+                <option value="company">Company Site</option>
+              </select>
+            </div>
+            <button class="btn-clear" onclick="clearFilters()">Clear</button>
+          </div>
+
+          <!-- Job Results Header -->
+          <div class="results-header">
+            <span id="jobs-count" class="results-count">Loading jobs...</span>
+            <div class="sort-group">
+              <label>Sort by:</label>
+              <select id="sort-jobs" onchange="sortJobs()" class="filter-select sm">
+                <option value="match">Best Match</option>
+                <option value="recent">Most Recent</option>
+                <option value="salary">Highest Salary</option>
+                <option value="company">Company A-Z</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Jobs Grid -->
+          <div id="jobs-grid" class="jobs-grid">
+            <!-- Populated by JS -->
+          </div>
+
+          <div id="jobs-loading" class="loading-state hidden">
+            <div class="loading-spinner"></div>
+            <p>AI is searching across LinkedIn, Indeed, Naukri, Wellfound...</p>
+          </div>
+
+          <div id="no-jobs" class="empty-state hidden">
+            <div class="empty-icon">🔍</div>
+            <h3>No jobs found</h3>
+            <p>Try adjusting your filters or uploading your resume for better matches</p>
+          </div>
+        </div>
+
+        <!-- APPLICATIONS PAGE -->
+        <div id="page-applications" class="page" data-page="applications">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Applications</h1>
+              <p class="page-subtitle">Track every application in one place</p>
+            </div>
+            <button class="btn-primary" onclick="showAddApplicationModal()">+ Add Application</button>
+          </div>
+
+          <!-- App Stats -->
+          <div class="app-pipeline-stats">
+            <div class="pipeline-stat" onclick="filterApplications('all')">
+              <span class="ps-num" id="ps-all">12</span>
+              <span class="ps-label">Total</span>
+            </div>
+            <div class="pipeline-stat applied" onclick="filterApplications('applied')">
+              <span class="ps-num" id="ps-applied">6</span>
+              <span class="ps-label">Applied</span>
+            </div>
+            <div class="pipeline-stat viewed" onclick="filterApplications('viewed')">
+              <span class="ps-num" id="ps-viewed">3</span>
+              <span class="ps-label">Viewed</span>
+            </div>
+            <div class="pipeline-stat shortlisted" onclick="filterApplications('shortlisted')">
+              <span class="ps-num" id="ps-shortlisted">1</span>
+              <span class="ps-label">Shortlisted</span>
+            </div>
+            <div class="pipeline-stat interview" onclick="filterApplications('interview')">
+              <span class="ps-num" id="ps-interview">2</span>
+              <span class="ps-label">Interview</span>
+            </div>
+            <div class="pipeline-stat offer" onclick="filterApplications('offer')">
+              <span class="ps-num" id="ps-offer">0</span>
+              <span class="ps-label">Offer</span>
+            </div>
+          </div>
+
+          <!-- Kanban view toggle -->
+          <div class="view-toggle">
+            <button class="view-btn active" id="table-view-btn" onclick="switchView('table')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              Table
+            </button>
+            <button class="view-btn" id="kanban-view-btn" onclick="switchView('kanban')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18"/><rect x="14" y="3" width="7" height="18"/></svg>
+              Kanban
+            </button>
+          </div>
+
+          <!-- Table View -->
+          <!-- Export Bar -->
+          <div class="export-bar">
+            <button class="btn-secondary" onclick="exportApplicationsCSV()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+            <button class="btn-secondary" onclick="autoUpdateStatuses()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+              Auto-Check Status
+            </button>
+          </div>
+
+          <div id="applications-table-view">
+            <div class="table-wrapper glassmorphism">
+              <table class="applications-table" id="applications-table">
+                <thead>
+                  <tr>
+                    <th>Company</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Applied Date</th>
+                    <th>Link</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="applications-tbody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Kanban View -->
+          <div id="applications-kanban-view" class="hidden">
+            <div class="kanban-board" id="kanban-board"></div>
+          </div>
+        </div>
+
+        <!-- RESUME LAB PAGE -->
+        <div id="page-resume" class="page" data-page="resume">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Resume Lab</h1>
+              <p class="page-subtitle">Upload, analyze, and AI-tailor your resume for any job</p>
+            </div>
+          </div>
+
+          <div class="resume-lab-grid">
+            <!-- Upload Zone -->
+            <div class="upload-zone-card glassmorphism">
+              <h2>📤 Upload Resume</h2>
+              <div class="upload-zone" id="upload-zone" onclick="triggerFileUpload()" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event)">
+                <div class="upload-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </div>
+                <p class="upload-text">Drag & drop or click to upload</p>
+                <p class="upload-subtext">PDF, DOCX, DOC · Max 10MB</p>
+                <input type="file" id="resume-file-input" accept=".pdf,.docx,.doc" class="hidden" onchange="handleResumeUpload(this)" />
+              </div>
+              <div id="upload-progress" class="hidden">
+                <div class="upload-file-info">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                  <span id="upload-filename">resume.pdf</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" id="upload-progress-fill"></div></div>
+                <span id="upload-status">Parsing resume...</span>
+              </div>
+            </div>
+
+            <!-- Parsed Data -->
+            <div class="parsed-data-card glassmorphism" id="parsed-data-card">
+              <h2>🤖 AI Parsed Data</h2>
+              <div id="parsed-content">
+                <div class="empty-parse">
+                  <p>Upload your resume to see AI extracted data</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Generated Resumes -->
+          <div class="section-card glassmorphism" style="margin-top: 1.5rem;">
+            <div class="section-header">
+              <h2>🎯 AI-Generated Resumes</h2>
+              <span class="badge-count" id="generated-resumes-count">0 resumes</span>
+            </div>
+            <div id="generated-resumes-list" class="generated-list">
+              <div class="empty-state-inline">
+                <p>Apply to jobs and generate tailored resumes for each position</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Universal Application Profile Section -->
+        <div class="section-card glassmorphism" style="margin-top: 1.5rem;" id="universal-profile-card">
+          <div class="section-header">
+            <h2>🌐 Universal Application Profile</h2>
+            <span style="font-size:0.8rem;color:var(--text-secondary)">Filled once · Used for every auto-application</span>
+          </div>
+          <div class="universal-profile-grid">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expected Salary</label>
+                <input type="text" id="univ-salary" class="form-input" placeholder="e.g. 15-25 LPA or $100K" />
+              </div>
+              <div class="form-group">
+                <label>Notice Period</label>
+                <select id="univ-notice" class="form-input">
+                  <option value="immediate">Immediate</option>
+                  <option value="15">15 Days</option>
+                  <option value="30">30 Days</option>
+                  <option value="60">60 Days</option>
+                  <option value="90">90 Days</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>GitHub Profile</label>
+                <input type="url" id="univ-github" class="form-input" placeholder="https://github.com/username" />
+              </div>
+              <div class="form-group">
+                <label>Work Authorization</label>
+                <select id="univ-work-auth" class="form-input">
+                  <option value="citizen">Citizen</option>
+                  <option value="pr">Permanent Resident</option>
+                  <option value="visa">Work Visa (H1B etc.)</option>
+                  <option value="student">Student Visa (OPT/CPT)</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Willing to Relocate?</label>
+                <select id="univ-relocate" class="form-input">
+                  <option value="yes">Yes, open to relocation</option>
+                  <option value="no">No, prefer current location</option>
+                  <option value="maybe">Open to discussion</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Visa Sponsorship Needed?</label>
+                <select id="univ-visa" class="form-input">
+                  <option value="no">No, not required</option>
+                  <option value="yes">Yes, required</option>
+                  <option value="future">May be required in future</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Gender (Optional)</label>
+                <select id="univ-gender" class="form-input">
+                  <option value="prefer_not">Prefer not to say</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="non_binary">Non-binary</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Disability Status (Optional)</label>
+                <select id="univ-disability" class="form-input">
+                  <option value="prefer_not">Prefer not to say</option>
+                  <option value="no">No disability</option>
+                  <option value="yes">Yes, I have a disability</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Years of Experience</label>
+                <input type="number" id="univ-yoe" class="form-input" placeholder="e.g. 3" min="0" max="40" />
+              </div>
+              <div class="form-group">
+                <label>Graduation Year</label>
+                <input type="number" id="univ-grad-year" class="form-input" placeholder="e.g. 2021" min="1990" max="2030" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Cover Letter (Default Template)</label>
+              <textarea id="univ-cover-template" class="form-input" rows="4" placeholder="Write a brief intro that will be used as a base for all auto-generated cover letters..."></textarea>
+            </div>
+            <button class="btn-primary" onclick="saveUniversalProfile()">💾 Save Application Profile</button>
+          </div>
+        </div>
+
+        <!-- COVER LETTERS PAGE -->
+        <div id="page-cover" class="page" data-page="cover">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Cover Letters</h1>
+              <p class="page-subtitle">AI-generated, personalized cover letters for every application</p>
+            </div>
+            <button class="btn-primary" onclick="showCoverLetterModal()">+ Generate Cover Letter</button>
+          </div>
+
+          <div id="cover-letters-grid" class="cover-letters-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- SAVED JOBS PAGE -->
+        <div id="page-saved" class="page" data-page="saved">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Saved Jobs</h1>
+              <p class="page-subtitle">Jobs you bookmarked for later review</p>
+            </div>
+            <button class="btn-primary" onclick="autoApplySaved()">⚡ Auto-Apply All Saved</button>
+          </div>
+          <div id="saved-jobs-grid" class="jobs-grid">
+            <div class="empty-state" style="grid-column:1/-1">
+              <div class="empty-icon">🔖</div>
+              <h3>No saved jobs yet</h3>
+              <p>Save jobs from the Job Feed by clicking the bookmark icon</p>
+              <button class="btn-primary" onclick="navigateTo('jobs')" style="margin-top:1rem">Browse Jobs →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AUTO APPLY PAGE -->
+        <div id="page-autoapply" class="page" data-page="autoapply">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Auto Apply Engine</h1>
+              <p class="page-subtitle">AI-powered automated job application system</p>
+            </div>
+            <button class="btn-primary" onclick="startAutoApplySession()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Start Auto Apply
+            </button>
+          </div>
+
+          <!-- Auto Apply Stats -->
+          <div class="stats-grid" style="margin-bottom:1.5rem">
+            <div class="stat-card glassmorphism">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </div>
+              <div class="stat-content">
+                <span class="stat-number" id="aa-total">0</span>
+                <span class="stat-label">Auto Applied</span>
+              </div>
+              <div class="stat-trend up">This session</div>
+            </div>
+            <div class="stat-card glassmorphism">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+              </div>
+              <div class="stat-content">
+                <span class="stat-number" id="aa-pending">0</span>
+                <span class="stat-label">Needs Info</span>
+              </div>
+              <div class="stat-trend">Pending queue</div>
+            </div>
+            <div class="stat-card glassmorphism">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              </div>
+              <div class="stat-content">
+                <span class="stat-number" id="aa-success">0</span>
+                <span class="stat-label">Success Rate</span>
+              </div>
+              <div class="stat-trend up">Jobs successfully submitted</div>
+            </div>
+            <div class="stat-card glassmorphism">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+              </div>
+              <div class="stat-content">
+                <span class="stat-number" id="aa-time">0m</span>
+                <span class="stat-label">Time Saved</span>
+              </div>
+              <div class="stat-trend up">vs manual apply</div>
+            </div>
+          </div>
+
+          <!-- ATS Systems Supported -->
+          <div class="glassmorphism" style="padding:1.25rem;margin-bottom:1.5rem;">
+            <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;">🤖 Supported ATS Systems</h3>
+            <div class="ats-systems-grid" id="ats-systems">
+              <div class="ats-badge ats-active">✅ Workday</div>
+              <div class="ats-badge ats-active">✅ Greenhouse</div>
+              <div class="ats-badge ats-active">✅ Lever</div>
+              <div class="ats-badge ats-active">✅ Taleo</div>
+              <div class="ats-badge ats-partial">🔄 iCIMS</div>
+              <div class="ats-badge ats-partial">🔄 SAP SuccessFactors</div>
+              <div class="ats-badge ats-active">✅ LinkedIn Easy Apply</div>
+              <div class="ats-badge ats-partial">🔄 SmartRecruiters</div>
+              <div class="ats-badge ats-partial">🔄 BambooHR</div>
+              <div class="ats-badge ats-coming">🕐 Jobvite (Coming Soon)</div>
+            </div>
+          </div>
+
+          <!-- Auto Apply Queue -->
+          <div class="aa-grid">
+            <div class="glassmorphism" style="padding:1.25rem;">
+              <div class="section-header">
+                <h3>⚡ Ready to Apply</h3>
+                <button class="btn-secondary" onclick="addTopJobsToQueue()">+ Add Top 10 Matches</button>
+              </div>
+              <div id="apply-queue-list" class="apply-queue">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+            <div class="glassmorphism" style="padding:1.25rem;">
+              <div class="section-header">
+                <h3>⚠️ Pending Information</h3>
+                <span style="font-size:0.78rem;color:var(--warning)">Needs your input</span>
+              </div>
+              <div id="pending-queue-list" class="apply-queue">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Log -->
+          <div class="glassmorphism" style="padding:1.25rem;margin-top:1.5rem;">
+            <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;">📋 Application Activity Log</h3>
+            <div id="aa-activity-log" class="activity-log">
+              <div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:0.85rem;">No activity yet. Start Auto Apply to see logs.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SALARY INSIGHTS PAGE -->
+        <div id="page-salary" class="page" data-page="salary">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Salary Insights</h1>
+              <p class="page-subtitle">AI-powered market salary data for your role</p>
+            </div>
+          </div>
+
+          <!-- Salary Calculator -->
+          <div class="salary-calc-section glassmorphism" style="padding:1.5rem;margin-bottom:1.5rem;">
+            <h2 style="font-size:1rem;font-weight:700;margin-bottom:1rem;">🎯 Salary Calculator</h2>
+            <div class="salary-calc-grid">
+              <div class="form-group">
+                <label>Role</label>
+                <select id="sc-role" class="form-input" onchange="updateSalaryInsights()">
+                  <option value="fullstack">Full Stack Developer</option>
+                  <option value="frontend">Frontend Developer</option>
+                  <option value="backend">Backend Developer</option>
+                  <option value="data">Data Scientist</option>
+                  <option value="ml">ML Engineer</option>
+                  <option value="devops">DevOps Engineer</option>
+                  <option value="product">Product Manager</option>
+                  <option value="designer">UI/UX Designer</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Experience Level</label>
+                <select id="sc-exp" class="form-input" onchange="updateSalaryInsights()">
+                  <option value="fresher">Fresher (0-1y)</option>
+                  <option value="junior">Junior (1-3y)</option>
+                  <option value="mid" selected>Mid (3-5y)</option>
+                  <option value="senior">Senior (5+y)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Location</label>
+                <select id="sc-location" class="form-input" onchange="updateSalaryInsights()">
+                  <option value="bangalore">Bangalore, India</option>
+                  <option value="mumbai">Mumbai, India</option>
+                  <option value="delhi">Delhi NCR, India</option>
+                  <option value="hyderabad">Hyderabad, India</option>
+                  <option value="usa">USA (Remote)</option>
+                  <option value="uk">UK (Remote)</option>
+                  <option value="remote">Remote, Worldwide</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Salary Results -->
+          <div id="salary-results" class="salary-results-grid">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Top Paying Companies -->
+          <div class="glassmorphism" style="padding:1.5rem;margin-top:1.5rem;">
+            <h2 style="font-size:1rem;font-weight:700;margin-bottom:1rem;">🏆 Top Paying Companies for Your Role</h2>
+            <div id="top-paying-companies" class="top-companies-grid">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- INTERVIEW PREP PAGE -->
+        <div id="page-prep" class="page" data-page="prep">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Interview Prep</h1>
+              <p class="page-subtitle">AI-powered preparation for every interview</p>
+            </div>
+          </div>
+
+          <div class="prep-grid">
+            <!-- Prep selector -->
+            <div class="prep-selector glassmorphism">
+              <h3>Select a Job to Prepare</h3>
+              <div id="prep-job-list" class="prep-job-list"></div>
+            </div>
+
+            <!-- Prep Content -->
+            <div class="prep-content" id="prep-content">
+              <div class="prep-tabs">
+                <button class="prep-tab active" onclick="switchPrepTab('company')">🏢 Company</button>
+                <button class="prep-tab" onclick="switchPrepTab('role')">💼 Role Prep</button>
+                <button class="prep-tab" onclick="switchPrepTab('questions')">❓ Questions</button>
+                <button class="prep-tab" onclick="switchPrepTab('coding')">💻 Coding</button>
+                <button class="prep-tab" onclick="switchPrepTab('hr')">👤 HR Round</button>
+              </div>
+              <div id="prep-tab-content" class="prep-tab-content glassmorphism">
+                <div class="prep-placeholder">
+                  <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
+                  <h3>Select a job to start preparing</h3>
+                  <p>We'll generate company research, interview questions, coding challenges, and more</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROFILE PAGE -->
+        <div id="page-profile" class="page" data-page="profile">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Profile</h1>
+              <p class="page-subtitle">Your professional profile & preferences</p>
+            </div>
+            <button class="btn-primary" onclick="saveProfile()">Save Changes</button>
+          </div>
+
+          <div class="profile-grid">
+            <!-- Profile Card -->
+            <div class="profile-main glassmorphism">
+              <div class="profile-header-section">
+                <div class="profile-avatar-big" id="profile-avatar-big">JD</div>
+                <div>
+                  <h2 id="profile-display-name">John Doe</h2>
+                  <p id="profile-display-role">Full Stack Developer</p>
+                  <div class="profile-score">
+                    <div class="score-bar">
+                      <div class="score-fill" style="width: 78%"></div>
+                    </div>
+                    <span>Profile 78% complete</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="profile-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="prof-name" class="form-input" value="John Doe" />
+                  </div>
+                  <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="prof-email" class="form-input" value="john@example.com" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="prof-phone" class="form-input" placeholder="+91 9876543210" />
+                  </div>
+                  <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="prof-location" class="form-input" placeholder="Bangalore, India" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>LinkedIn URL</label>
+                    <input type="url" id="prof-linkedin" class="form-input" placeholder="https://linkedin.com/in/..." />
+                  </div>
+                  <div class="form-group">
+                    <label>Portfolio URL</label>
+                    <input type="url" id="prof-portfolio" class="form-input" placeholder="https://yoursite.com" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Preferred Role</label>
+                    <input type="text" id="prof-role" class="form-input" placeholder="Full Stack Developer" />
+                  </div>
+                  <div class="form-group">
+                    <label>Work Mode</label>
+                    <select id="prof-mode" class="form-input">
+                      <option>Remote</option>
+                      <option>Hybrid</option>
+                      <option>On-site</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Skills (comma separated)</label>
+                  <input type="text" id="prof-skills" class="form-input" placeholder="React, Node.js, Python, AWS..." value="React, Node.js, TypeScript, Python, MongoDB, AWS" />
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>GitHub URL</label>
+                    <input type="url" id="prof-github" class="form-input" placeholder="https://github.com/username" />
+                  </div>
+                  <div class="form-group">
+                    <label>Expected Salary (LPA)</label>
+                    <input type="text" id="prof-salary" class="form-input" placeholder="12-20 LPA" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>About / Summary</label>
+                  <textarea id="prof-about" class="form-input" rows="4" placeholder="Brief professional summary..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile Sidebar -->
+            <div class="profile-sidebar">
+              <div class="aside-card glassmorphism">
+                <h3>🎯 Job Preferences</h3>
+                <div class="pref-item">
+                  <span class="pref-label">Experience Level</span>
+                  <select class="filter-select" id="pref-exp">
+                    <option>Fresher</option>
+                    <option>Junior</option>
+                    <option selected>Mid-Level</option>
+                    <option>Senior</option>
+                  </select>
+                </div>
+                <div class="pref-item">
+                  <span class="pref-label">Job Type</span>
+                  <select class="filter-select" id="pref-type">
+                    <option>Full Time</option>
+                    <option>Part Time</option>
+                    <option>Contract</option>
+                    <option>Internship</option>
+                  </select>
+                </div>
+                <div class="pref-item">
+                  <span class="pref-label">Open to Relocation</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="pref-relocation" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="aside-card glassmorphism">
+                <h3>🔔 Notifications</h3>
+                <div class="pref-item">
+                  <span class="pref-label">New job matches</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="notif-jobs" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="pref-item">
+                  <span class="pref-label">Application updates</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="notif-apps" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="pref-item">
+                  <span class="pref-label">Interview reminders</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="notif-interviews" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="aside-card glassmorphism">
+                <h3>📊 Profile Stats</h3>
+                <div class="profile-stats-list" id="profile-stats"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========== MODALS ========== -->
+
+  <!-- Job Detail Modal -->
+  <div id="job-modal" class="modal-overlay hidden" onclick="closeJobModal(event)">
+    <div class="modal-container glassmorphism" id="job-modal-content">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- Resume Generator Modal -->
+  <div id="resume-modal" class="modal-overlay hidden" onclick="closeModal('resume-modal', event)">
+    <div class="modal-container glassmorphism modal-md">
+      <div class="modal-header">
+        <h2>✨ AI Resume Generator</h2>
+        <button class="modal-close" onclick="closeModal('resume-modal')">✕</button>
+      </div>
+      <div class="modal-body" id="resume-modal-body">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Cover Letter Modal -->
+  <div id="cover-modal" class="modal-overlay hidden" onclick="closeModal('cover-modal', event)">
+    <div class="modal-container glassmorphism modal-md">
+      <div class="modal-header">
+        <h2>✉️ AI Cover Letter Generator</h2>
+        <button class="modal-close" onclick="closeModal('cover-modal')">✕</button>
+      </div>
+      <div class="modal-body" id="cover-modal-body">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Application Modal -->
+  <div id="add-app-modal" class="modal-overlay hidden" onclick="closeModal('add-app-modal', event)">
+    <div class="modal-container glassmorphism modal-md">
+      <div class="modal-header">
+        <h2>➕ Add Application</h2>
+        <button class="modal-close" onclick="closeModal('add-app-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Company Name *</label>
+          <input type="text" id="new-app-company" class="form-input" placeholder="Google, Microsoft..." />
+        </div>
+        <div class="form-group">
+          <label>Role *</label>
+          <input type="text" id="new-app-role" class="form-input" placeholder="Software Engineer..." />
+        </div>
+        <div class="form-group">
+          <label>Application URL</label>
+          <input type="url" id="new-app-url" class="form-input" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="new-app-status" class="form-input">
+            <option value="applied">Applied</option>
+            <option value="viewed">Viewed</option>
+            <option value="shortlisted">Shortlisted</option>
+            <option value="interview">Interview</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="new-app-notes" class="form-input" rows="3" placeholder="Any notes..."></textarea>
+        </div>
+        <button class="btn-primary btn-full" onclick="addApplication()">Add Application</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Floating Assistant -->
+  <div class="ai-assistant" id="ai-assistant" onclick="toggleAIAssistant()">
+    <div class="ai-assistant-icon">
+      <div class="ai-pulse-ring"></div>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 010 2h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 010-2h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2M9 9a5 5 0 00-5 5v4h16v-4a5 5 0 00-5-5"/><circle cx="9" cy="15" r="1.5" fill="white" stroke="none"/><circle cx="15" cy="15" r="1.5" fill="white" stroke="none"/></svg>
+    </div>
+  </div>
+
+  <!-- AI Chat Panel -->
+  <div class="ai-chat-panel glassmorphism hidden" id="ai-chat-panel">
+    <div class="ai-chat-header">
+      <div class="ai-chat-info">
+        <div class="ai-pulse-small"></div>
+        <div>
+          <span class="ai-chat-name">job.ai</span>
+          <span class="ai-chat-status">Always active</span>
+        </div>
+      </div>
+      <button onclick="toggleAIAssistant()">✕</button>
+    </div>
+    <div class="ai-chat-messages" id="ai-chat-messages">
+      <div class="ai-message">
+        <div class="ai-msg-content">
+          Hi! I'm your AI assistant. I can help you find jobs, improve your resume, generate cover letters, or prep for interviews. What can I do for you?
+        </div>
+      </div>
+    </div>
+    <div class="ai-chat-input">
+      <input type="text" placeholder="Ask me anything..." id="ai-input" onkeypress="handleAIChat(event)" />
+      <button onclick="sendAIMessage()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/jobs.js"></script>
+  <script src="js/applications.js"></script>
+  <script src="js/resume.js"></script>
+  <script src="js/prep.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/autoapply.js"></script>
+  <script src="js/salary.js"></script>
+
+  <!-- Backend API Configuration -->
+  <script>
+    // Set API base URL — change this in production to your deployed backend URL
+    window.JB_API_BASE = 'http://localhost:5000/api';
+    window.JB_SOCKET_URL = 'http://localhost:5000';
+  </script>
+
+  <!-- Socket.io Client (loaded from backend) -->
+  <script src="http://localhost:5000/socket.io/socket.io.js" onerror="console.warn('[job.bar] Backend not running — using local mode')"></script>
+
+  <!-- API Bridge — must load last to override frontend functions -->
+  <script src="js/api.js"></script>
+</body>
+</html>
