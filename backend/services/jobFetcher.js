@@ -31,10 +31,20 @@ const fetchFromRapidAPI = async (query = 'software engineer', location = 'india'
         const existing = await Job.findOne({ externalId: j.job_id });
         if (existing) continue;
 
+        // Better salary formatting (Handle LPA for India)
+        let formattedSalary = 'Not disclosed';
+        if (j.job_min_salary && j.job_max_salary) {
+          const isLPA = j.job_max_salary < 1000000 && j.job_country === 'IN';
+          formattedSalary = isLPA 
+            ? `₹${(j.job_min_salary/1000).toFixed(1)}–${(j.job_max_salary/1000).toFixed(1)} LPA`
+            : `$${j.job_min_salary.toLocaleString()} – $${j.job_max_salary.toLocaleString()}`;
+        }
+
         const newJob = await Job.create({
           title: j.job_title || 'Software Engineer',
           company: j.employer_name || 'Unknown Company',
-          companyLogo: j.employer_logo || '',
+          // Use Clearbit as backup for professional logos
+          companyLogo: j.employer_logo || `https://logo.clearbit.com/${j.employer_name.split(' ')[0].toLowerCase()}.com`,
           companyColor: `hsl(${Math.floor(Math.random() * 360)}, 65%, 45%)`,
           companyEmoji: (j.employer_name || 'C')[0].toUpperCase(),
           description: j.job_description?.slice(0, 2000) || '',
@@ -45,9 +55,7 @@ const fetchFromRapidAPI = async (query = 'software engineer', location = 'india'
             j.job_publisher?.toLowerCase().includes('indeed') ? 'indeed' : 'company',
           postedAt: j.job_posted_at_datetime_utc ? new Date(j.job_posted_at_datetime_utc) : new Date(),
           skills: extractSkillsFromDesc(j.job_description || ''),
-          salary: j.job_min_salary && j.job_max_salary
-            ? `$${j.job_min_salary.toLocaleString()} – $${j.job_max_salary.toLocaleString()}`
-            : 'Not disclosed',
+          salary: formattedSalary,
           externalId: j.job_id,
           source: 'rapidapi',
           expLevel: guessExpLevel(j.job_description || '', j.job_title || ''),
@@ -55,7 +63,7 @@ const fetchFromRapidAPI = async (query = 'software engineer', location = 'india'
         });
         saved.push(newJob);
       } catch (saveErr) {
-        // Skip duplicates or invalid entries
+        // Skip duplicates
       }
     }
 

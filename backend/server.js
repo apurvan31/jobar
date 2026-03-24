@@ -29,6 +29,7 @@ const aiRoutes = require('./routes/ai');
 const savedJobRoutes = require('./routes/savedJobs');
 const autoApplyRoutes = require('./routes/autoApply');
 const adminRoutes = require('./routes/admin');
+const newsRoutes = require('./routes/news'); // Added News Service
 
 // ---- Connect Database ----
 connectDB();
@@ -129,6 +130,7 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/saved-jobs', savedJobRoutes);
 app.use('/api/autoapply', autoApplyRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/news', newsRoutes); // Active News Hub
 
 // ---- 404 Handler ----
 app.use('*', (req, res) => {
