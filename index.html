@@ -224,8 +224,8 @@
         <div id="page-home" class="page active" data-page="home">
           <div class="page-header">
             <div>
-              <h1 class="page-title">Good afternoon, <span id="greeting-name" class="gradient-text">John</span> 👋</h1>
-              <p class="page-subtitle">Your AI is actively scanning <strong>247 jobs</strong> matching your profile</p>
+              <h1 class="page-title">Good afternoon, <span id="greeting-name" class="gradient-text user-name-placeholder">User</span> 👋</h1>
+              <p class="page-subtitle">Your AI is actively scanning <strong id="hero-job-count">...</strong> jobs matching your profile</p>
             </div>
             <button class="btn-primary" onclick="navigateTo('jobs')">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -240,10 +240,10 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
               </div>
               <div class="stat-content">
-                <span class="stat-number" data-target="247">0</span>
+                <span class="stat-number" id="stats-match-count">0</span>
                 <span class="stat-label">Jobs Matched</span>
               </div>
-              <div class="stat-trend up">↑ 18 today</div>
+              <div class="stat-trend up" id="stats-match-trend">Live Scan</div>
             </div>
             <div class="stat-card glassmorphism animate-in" style="--delay:0.2s">
               <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669)">

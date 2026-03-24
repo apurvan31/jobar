@@ -267,6 +267,11 @@ window.handleLogout = async function (forced = false) {
 // Extend loginUser to init socket and load real data
 const _loginUserOriginal = window.loginUser;
 window.loginUser = function (name, email, userId) {
+  // Update name placeholders in UI
+  document.querySelectorAll('.user-name-placeholder, #greeting-name').forEach(el => {
+    el.textContent = name || 'User';
+  });
+
   // Call original loginUser (defined in app.js)
   if (_loginUserOriginal) _loginUserOriginal(name, email);
   
@@ -290,7 +295,14 @@ window.loginUser = function (name, email, userId) {
 async function loadDashboardStats() {
   try {
     const { stats } = await api.get('/users/dashboard-stats');
-    // Update stat numbers
+    
+    // Update dashboard counts
+    const jobCount = stats.jobsMatched || AppData.jobs.length;
+    document.querySelectorAll('#hero-job-count, #stats-match-count').forEach(el => {
+      el.textContent = jobCount;
+    });
+
+    // Update pipeline stats
     updateCountEl('ps-all', stats.totalApplications);
     updateCountEl('ps-applied', stats.applied);
     updateCountEl('ps-viewed', stats.viewed);
@@ -677,6 +689,22 @@ window.generateCoverLetter = async function () {
     if (_generateCoverLetterOriginal) _generateCoverLetterOriginal();
   } finally {
     if (btn) { btn.textContent = '✨ Generate with AI'; btn.disabled = false; }
+  }
+};
+
+// Override generateInterviewPrep (already defined above in apiService.js, adding the frontend bridge here)
+window.generatePrepData = async function ({ role, company, jobDescription, skills, difficulty }) {
+  if (!Auth.getToken()) {
+    showToast('Please log in for AI Interview Prep', 'info');
+    return null;
+  }
+  
+  try {
+    const data = await api.post('/ai/interview-prep', { role, company, jobDescription, skills, difficulty });
+    return data;
+  } catch (err) {
+    showToast('Analysis failed: ' + err.message, 'error');
+    return null;
   }
 };
 

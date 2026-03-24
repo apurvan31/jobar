@@ -10,12 +10,36 @@ const logger = require('../utils/logger');
 // In-memory queue map (per user). Use Bull+Redis in production for scalability.
 const userQueues = new Map();
 
-// ---- Helper: simulate an apply attempt ----
-async function simulateApply(job) {
-  await new Promise(r => setTimeout(r, 800 + Math.random() * 1200));
-  // 90% success rate simulation
-  const success = Math.random() > 0.1;
-  return success;
+// ---- Helper: simulate an apply attempt with multi-step progress ----
+async function simulateApply(job, userId, io) {
+  const steps = [
+    'Reading job details...',
+    'Tailoring resume with AI...',
+    'Checking for questionnaire...',
+    'Finalizing application...'
+  ];
+
+  for (const step of steps) {
+    if (io) {
+      io.to(`user:${userId}`).emit('autoapply-progress', {
+        jobId: job._id,
+        company: job.company,
+        status: 'processing',
+        message: step,
+      });
+    }
+    
+    // Artificial delay
+    await new Promise(r => setTimeout(r, 600 + Math.random() * 600));
+
+    // Simulation: 15% of jobs require additional info/questionnaire
+    if (step === 'Checking for questionnaire...' && Math.random() < 0.15) {
+      return 'requires-details';
+    }
+  }
+
+  // 90% final success rate for the remaining
+  return Math.random() > 0.05 ? 'success' : 'failed';
 }
 
 // ---- POST /api/autoapply/start ----
@@ -58,7 +82,9 @@ router.post('/start', protect, [
             });
           }
 
-          const success = await simulateApply(job);
+          const result = await simulateApply(job, userId, io);
+          const isSuccess = result === 'success';
+          const isRequiresDetails = result === 'requires-details';
 
           const application = await Application.create({
             user: req.user._id,
@@ -67,22 +93,27 @@ router.post('/start', protect, [
             role: job.title,
             applyUrl: job.applyUrl,
             platform: job.platform,
-            status: success ? 'applied' : 'applied',
+            status: isRequiresDetails ? 'requires-details' : 'applied',
             isAutoApplied: true,
-            autoApplyStatus: success ? 'success' : 'failed',
-            autoApplyError: success ? undefined : 'ATS bot detection',
+            autoApplyStatus: result,
+            autoApplyError: isSuccess || isRequiresDetails ? undefined : 'ATS bot detection',
             companyColor: job.companyColor,
             companyEmoji: job.companyEmoji,
-            notes: `Auto-applied via job.bar AI engine`,
-            statusHistory: [{ status: 'applied', date: new Date() }],
+            notes: isRequiresDetails ? 'Questionnaire required by company.' : 'Auto-applied via job.bar AI engine',
+            statusHistory: [{ status: isRequiresDetails ? 'requires-details' : 'applied', date: new Date() }],
           });
 
-          if (success) applied++; else failed++;
+          if (isSuccess) applied++; 
+          else if (isRequiresDetails) skipped++; // Group with skipped for now
+          else failed++;
 
           if (io) {
             io.to(`user:${userId}`).emit('autoapply-progress', {
-              jobId, company: job.company, role: job.title,
-              status: success ? 'success' : 'failed',
+              jobId, 
+              company: job.company, 
+              role: job.title,
+              status: result,
+              message: isRequiresDetails ? 'Needs additional info' : (isSuccess ? 'Applied successfully' : 'Application failed'),
               applicationId: application._id,
             });
           }

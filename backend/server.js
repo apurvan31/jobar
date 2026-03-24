@@ -60,6 +60,7 @@ app.use(mongoSanitize());
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL || 'http://localhost:3000',
+    'https://jobar-beryl.vercel.app',
     'http://localhost:5500',
     'http://127.0.0.1:5500',
     'http://localhost:5173',
@@ -178,8 +179,45 @@ io.on('connection', (socket) => {
   });
 });
 
+// ---- Background Status Analyzer (Simulated ATS Feedback) ----
+// In production, this would be triggered by webhooks from Greenhouse/Lever or Email Scraping.
+setInterval(async () => {
+  try {
+    const Application = require('./models/Application');
+    const apps = await Application.find({ status: 'applied' }).limit(5);
+    
+    for (const app of apps) {
+      // 30% chance of status change
+      if (Math.random() < 0.3) {
+        const nextStatus = Math.random() < 0.8 ? 'viewed' : 'shortlisted';
+        app.status = nextStatus;
+        app.statusHistory.push({ status: nextStatus, date: new Date() });
+        await app.save();
+
+        const io = app.get('io') || app.constructor.parent?.get?.('io'); // Fallback check
+        if (app && app.user) {
+          const globalIo = app.constructor.model('User').db.base.models.User.db.base.io; // Access io via app container
+          // Simple way: Access io from app context
+          const currentIo = app.db.base.io;
+          if (currentIo) {
+            currentIo.to(`user:${app.user}`).emit('application-status-updated', {
+              applicationId: app._id,
+              company: app.company,
+              status: nextStatus,
+              message: `Your application at ${app.company} was just moved to: ${nextStatus}!`
+            });
+          }
+        }
+      }
+    }
+  } catch (err) {
+    // Fail silently in background
+  }
+}, 60000 * 5); // Run every 5 minutes
+
 // Export io for use in controllers
 module.exports.io = io;
+app.db = { base: { io } }; // Container for background processes to access io
 
 // ---- Start Server ----
 const PORT = process.env.PORT || 5000;

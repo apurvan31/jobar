@@ -93,67 +93,51 @@ ${name}`;
   return await callGPT(systemPrompt, userPrompt, mockResponse);
 };
 
-// ---- Generate Interview Prep ----
+// ---- Generate Interview Prep (Real-Time AI) ----
 const generateInterviewPrep = async ({ role, company, jobDescription, skills, difficulty }) => {
-  const systemPrompt = `You are an expert technical interviewer at a top tech company. 
-Generate realistic, role-specific interview questions with detailed model answers.`;
+  const systemPrompt = `You are an expert technical recruiter and researcher. 
+Generate a comprehensive 5-round interview preparation guide for the role of ${role} at ${company}. 
+Be specific to ${company}'s known interview style and tech stack.`;
 
-  const userPrompt = `Generate interview prep for:
+  const userPrompt = `Generate a prep guide for:
 Role: ${role} at ${company}
-Skills: ${skills}
-Difficulty: ${difficulty}
-Job context: ${jobDescription.slice(0, 500)}
+Candidate Skills: ${skills}
+Difficulty Level: ${difficulty}
+Job Context: ${jobDescription?.slice(0, 1000) || 'N/A'}
 
-Provide:
-1. 5 technical questions with answers
-2. 3 behavioral questions (STAR format answers)
-3. 2 questions to ask the interviewer
-Format as JSON: { technical: [...], behavioral: [...], toAsk: [...] }`;
+Format the output as a clean JSON object with these keys:
+- aboutCompany: A snapshot of ${company}'s business, culture, and tech stack.
+- rolePrep: Specific technical domains or system designs to master for this role.
+- technical: 5 advanced technical questions with expert model answers.
+- coding: 3 coding/algo challenges (LeetCode style) relevant to ${company}'s stack.
+- hrRound: 4 behavioral questions (STAR method) focused on their core values.
+- insiderTips: 3 Pro-tips for succeeding in their specific interview process.`;
 
   const mockResponse = JSON.stringify({
+    aboutCompany: `${company} is a leader in its space, prioritizing scalability and user experience. They utilize a modern stack including ${skills?.split(',')[0] || 'Cloud'} and are known for a rigorous engineering culture.`,
+    rolePrep: `Brush up on system design, microservices architecture, and deep-dives into ${role} patterns.`,
     technical: [
-      {
-        q: `Explain the difference between REST and GraphQL. When would you use each?`,
-        a: `REST uses fixed endpoints and HTTP methods for CRUD operations — simple and cacheable. GraphQL uses a single endpoint where clients specify exactly what data they need, eliminating over/under-fetching. Use REST for simple public APIs; use GraphQL for complex, data-heavy apps with multiple client types.`,
-      },
-      {
-        q: `How do you handle state management in large React applications?`,
-        a: `For local UI state: useState/useReducer. For server state: React Query or SWR (caching, sync). For global client state: Zustand or Redux Toolkit. The key is keeping state as close to its usage as possible and avoiding over-centralization.`,
-      },
-      {
-        q: `Describe your approach to optimizing a slow database query.`,
-        a: `First, use EXPLAIN to identify bottlenecks. Add indexes on filtered/sorted columns. Review N+1 query patterns — use JOINs or eager loading. Consider pagination, query caching, and denormalization for read-heavy data. Monitor with slow query logs.`,
-      },
-      {
-        q: `What's your approach to writing maintainable code?`,
-        a: `Follow SOLID principles, write self-documenting code with clear naming, keep functions small and single-purpose, write tests first (TDD), use consistent patterns, document the "why" not the "what," and review code with the next developer in mind.`,
-      },
-      {
-        q: `How would you design a URL shortener like bit.ly?`,
-        a: `Use base62 encoding for short codes. Store {shortCode → longURL} in Redis (cache) + PostgreSQL (persistence). Use a counter or UUID for uniqueness. CDN for high-traffic reads. Rate limiting per IP. Track click analytics asynchronously via a queue.`,
-      },
+      { q: "How would you handle a sudden 10x spike in traffic?", a: "Implement horizontal scaling, caching layers (Redis), and leverage CDN caching for static assets." },
+      { q: "What are the trade-offs of using NoSQL vs SQL for this application?", a: "SQL provides ACID compliance for payments; NoSQL provides schema flexibility for rapid iteration on user profiles." }
     ],
-    behavioral: [
-      {
-        q: `Tell me about a time you dealt with a difficult technical challenge under tight deadlines.`,
-        a: `STAR: In my last role, our payment integration broke 2 days before launch. I systematically isolated the issue to an API rate limit conflict. I implemented exponential backoff, added retry logic, and deployed a hotfix within 4 hours. The launch succeeded on time with zero payment failures.`,
-      },
-      {
-        q: `Describe a situation where you had to learn something completely new quickly.`,
-        a: `When we migrated to Kubernetes, I had no prior experience. I dedicated evenings to the official docs and built a test cluster. Within 2 weeks I containerized our 3 main services and wrote the deployment manifests, cutting deployment time by 60%.`,
-      },
-      {
-        q: `How do you handle disagreements with your team about technical decisions?`,
-        a: `I believe in data over opinions. I prepare a structured comparison of approaches with trade-offs, share it async for team review, then discuss synchronously. If we're still split, I defer to the most affected team member's judgment while documenting the decision rationale.`,
-      },
+    coding: [
+      { q: "Implement a rate limiter for our API.", a: "Use a Token Bucket or Leaky Bucket algorithm with Redis for distributed state." },
+      { q: "Find the shortest path in a dynamic grid.", a: "Use BFS or Dijkstra's depending on edge weights." }
     ],
-    toAsk: [
-      `What does success look like for this role in the first 90 days?`,
-      `What are the biggest technical challenges the team is currently facing?`,
+    hrRound: [
+      { q: "Tell me about a time you had a conflict with a lead.", a: "Focus on professional communication, de-escalation, and finding a data-driven middle ground." },
+      { q: "Why this company?", a: "Research their latest product launch and align it with your career growth." }
     ],
+    insiderTips: ["They love candidates who ask technical questions about their architecture.", "Expect a 'culture-fit' round with a senior director.", "Write clean, modular code during the technical screen."]
   });
 
-  return await callGPT(systemPrompt, userPrompt, mockResponse);
+  const resultStr = await callGPT(systemPrompt, userPrompt, mockResponse);
+  try {
+    return JSON.parse(resultStr);
+  } catch (e) {
+    logger.error('Failed to parse AI Prep JSON, returning mock data');
+    return JSON.parse(mockResponse);
+  }
 };
 
 // ---- AI Chat ----
