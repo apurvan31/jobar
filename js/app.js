@@ -197,6 +197,7 @@ function initHomePage() {
     renderPipelineChart();
     renderAISuggestions();
     renderUpcoming();
+    renderITNews();
 }
 
 function renderHomeFeed() {
@@ -280,6 +281,29 @@ function renderUpcoming() {
       </div>
     </div>
   `).join('');
+}
+
+function renderITNews() {
+    const news = [
+        { type: 'hiring', title: 'NVIDIA announces massive 2024 graduate hiring program in India', time: '2 hours ago' },
+        { type: 'trends', title: 'Generative AI skills now command 25% higher salary in SDE roles', time: '5 hours ago' },
+        { type: 'layoffs', title: 'Major Silicon Valley tech firm announces 10% workforce reduction', time: '1 day ago' },
+        { type: 'hiring', title: 'TCS to hire 40,000 freshers from campus this academic year', time: '2 days ago' },
+        { type: 'trends', title: 'The rise of "Full-Stack AI Engineers" — What you need to know', time: '3 days ago' },
+    ];
+
+    const list = document.getElementById('it-news-list');
+    if (list) {
+        list.innerHTML = news.map(n => `
+            <div class="news-item">
+                <div class="news-meta">
+                    <span class="news-tag ${n.type}">${n.type}</span>
+                    <span class="news-time">${n.time}</span>
+                </div>
+                <a href="#" class="news-title">${n.title}</a>
+            </div>
+        `).join('');
+    }
 }
 
 // ---- ANIMATE NUMBERS ----

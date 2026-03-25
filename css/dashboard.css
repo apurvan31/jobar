@@ -402,6 +402,69 @@
     color: var(--text-muted);
 }
 
+/* ---- IT INDUSTRY NEWS ---- */
+.it-news-section {
+    padding: 1.25rem;
+}
+
+.it-news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.news-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.2s;
+}
+
+.news-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.news-item:hover {
+    transform: translateX(4px);
+}
+
+.news-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+}
+
+.news-tag {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.news-tag.hiring { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+.news-tag.layoffs { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+.news-tag.trends { background: rgba(99, 102, 241, 0.15); color: var(--accent); }
+
+.news-time {
+    color: var(--text-muted);
+}
+
+.news-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.news-title:hover {
+    color: var(--accent);
+}
+
 /* ---- RESUME LAB ---- */
 .resume-lab-grid {
     display: grid;
