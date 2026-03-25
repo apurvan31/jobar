@@ -237,6 +237,85 @@
     padding: 0;
 }
 
+/* ---- MNC CAREERS SECTION ---- */
+.mnc-careers-section {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.mnc-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.mnc-link-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+}
+
+.mnc-link-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.mnc-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: white;
+}
+
+.mnc-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.mnc-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mnc-target {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+}
+
+.mnc-search-cta {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.mnc-search-cta p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
 /* ---- KANBAN BOARD ---- */
 .kanban-board {
     display: flex;
@@ -571,6 +650,7 @@
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
 }
 

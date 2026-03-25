@@ -32,6 +32,10 @@ const JOB_COMPANIES = [
   { name: 'TCS', color: '#003087', emoji: 'T', platform: 'naukri' },
   { name: 'Wipro', color: '#342D6E', emoji: 'W', platform: 'naukri' },
   { name: 'HCL Tech', color: '#0076CE', emoji: 'H', platform: 'naukri' },
+  { name: 'Cognizant', color: '#0033A0', emoji: 'C', platform: 'naukri' },
+  { name: 'Capgemini', color: '#0070AD', emoji: 'C', platform: 'linkedin' },
+  { name: 'Accenture', color: '#A100FF', emoji: 'A', platform: 'linkedin' },
+  { name: 'IBM', color: '#052FAD', emoji: 'IBM', platform: 'linkedin' },
   { name: 'Paytm', color: '#00BCD4', emoji: 'P', platform: 'naukri' },
   { name: 'Byju\'s', color: '#7B3FBE', emoji: 'B', platform: 'company' },
 ];
@@ -161,24 +165,36 @@ function generateJobs() {
     const matchScore = Math.floor(65 + Math.random() * 35);
     const company2Alt = JOB_COMPANIES[(i + 15) % JOB_COMPANIES.length];
 
+    const isWalkin = Math.random() > 0.8;
+    const isMNC = ['Infosys', 'TCS', 'Wipro', 'HCL Tech', 'Cognizant', 'Capgemini', 'Accenture', 'IBM'].includes(company.name);
+    
+    let finalRole = role.title;
+    if (isWalkin) finalRole = `[WALK-IN] ${role.title}`;
+    
+    // Ensure MNCs have more fresher/entry level roles as requested
+    let finalExp = expLevel;
+    if (isMNC && Math.random() > 0.4) finalExp = 'fresher';
+
     jobs.push({
       id: `job_${i + 1}`,
       company: company.name,
       companyColor: company.color,
       companyEmoji: company.emoji,
       platform: company.platform,
-      role: role.title,
+      role: finalRole,
       type: role.type,
-      expLevel: expLevel,
+      expLevel: finalExp,
+      isWalkin: isWalkin,
+      isMNC: isMNC,
       location: location.city,
       mode: location.mode,
-      salary: SALARY_RANGES[expLevel][Math.floor(Math.random() * SALARY_RANGES[expLevel].length)],
+      salary: SALARY_RANGES[finalExp][Math.floor(Math.random() * SALARY_RANGES[finalExp].length)],
       skills: selectedSkills,
       matchScore: matchScore,
       postedDate: postedDate.toISOString().split('T')[0],
       postedLabel: daysAgo === 0 ? 'Today' : daysAgo === 1 ? 'Yesterday' : `${daysAgo} days ago`,
-      description: JOB_DESCRIPTIONS[Math.floor(Math.random() * JOB_DESCRIPTIONS.length)],
-      applyUrl: `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(role.title + ' ' + company.name)}`,
+      description: isWalkin ? `WALK-IN DRIVE ALERT: ${company.name} is conducting a walk-in drive for ${finalRole}. \n\n${JOB_DESCRIPTIONS[Math.floor(Math.random() * JOB_DESCRIPTIONS.length)]}` : JOB_DESCRIPTIONS[Math.floor(Math.random() * JOB_DESCRIPTIONS.length)],
+      applyUrl: isMNC ? `https://www.google.com/search?q=${encodeURIComponent(company.name + ' careers for freshers ' + role.title)}` : `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(role.title + ' ' + company.name)}`,
       saved: false,
       applied: false,
     });

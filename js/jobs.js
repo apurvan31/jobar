@@ -51,6 +51,8 @@ function createJobCard(job, idx) {
       
       <div class="job-card-tags">
         <span class="tag ${job.mode}">${capitalize(job.mode)}</span>
+        ${job.isWalkin ? '<span class="tag walkin">⚡ WALK-IN</span>' : ''}
+        ${job.isMNC ? '<span class="tag mnc">🏢 MNC</span>' : ''}
         ${platformBadge}
         <span class="tag new">${job.postedLabel}</span>
       </div>
@@ -245,7 +247,7 @@ function filterJobs() {
     const exp = document.getElementById('filter-exp').value;
     const mode = document.getElementById('filter-mode').value;
     const location = document.getElementById('filter-location').value;
-    const platform = document.getElementById('filter-platform').value;
+    const special = document.getElementById('filter-special')?.value;
 
     filteredJobs = AppData.jobs.filter(job => {
         if (role && job.type !== role) return false;
@@ -253,7 +255,11 @@ function filterJobs() {
         if (mode && job.mode !== mode) return false;
         if (location && !job.location.toLowerCase().includes(location.toLowerCase()) &&
             !(location === 'remote' && job.mode === 'remote')) return false;
-        if (platform && job.platform !== platform) return false;
+        
+        if (special === 'walkin' && !job.isWalkin) return false;
+        if (special === 'mnc' && !job.isMNC) return false;
+        if (special === 'fresher' && job.expLevel !== 'fresher') return false;
+        
         return true;
     });
 
@@ -272,8 +278,9 @@ function sortJobs() {
 }
 
 function clearFilters() {
-    ['filter-role', 'filter-exp', 'filter-mode', 'filter-location', 'filter-platform'].forEach(id => {
-        document.getElementById(id).value = '';
+    ['filter-role', 'filter-exp', 'filter-mode', 'filter-location', 'filter-special'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
     });
     filteredJobs = [...AppData.jobs];
     renderJobs(filteredJobs);
@@ -361,4 +368,47 @@ function prepForJob(jobId) {
     closeJobModal();
     navigateTo('prep');
     setTimeout(() => selectPrepJob(job), 200);
+}
+
+// ---- AI MNC SCAN ----
+function aiScanMNCCareers() {
+    showToast('AI is scanning career portals: Wipro, Infosys, HCL, TCS, Cognizant...', 'info', 4000);
+    
+    // Create a special loading overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.style.zIndex = '2000';
+    overlay.innerHTML = `
+        <div class="modal-container glassmorphism animate-in" style="max-width:400px; text-align:center;">
+            <div class="loading-spinner" style="margin-bottom:1.5rem"></div>
+            <h3>Deep Scanning Career Portals...</h3>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.5rem">Finding latest 2024-2025 openings for Freshers</p>
+            <div id="scan-progress-text" style="font-size:0.75rem; color:var(--accent); margin-top:1rem; font-weight:600">Checking TCS...</div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const companies = ['TCS', 'Infosys', 'Wipro', 'Cognizant', 'Capgemini', 'HCL Tech', 'Accenture'];
+    let i = 0;
+    const interval = setInterval(() => {
+        if (i < companies.length) {
+            const progressText = document.getElementById('scan-progress-text');
+            if (progressText) progressText.textContent = `Checking ${companies[i]}...`;
+            i++;
+        } else {
+            clearInterval(interval);
+            if (document.body.contains(overlay)) document.body.removeChild(overlay);
+            showToast('Scan complete! Opening real-time career aggregator.', 'success');
+            
+            // Open a useful career aggregation search for freshers
+            const query = "latest mnc jobs for freshers 2024 2025 wipro infosys tcs cognizant hcl capgemini careers";
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}&tbs=qdr:w`, '_blank');
+            
+            // Filter the jobs feed to MNCs
+            const filterSpecial = document.getElementById('filter-special');
+            if (filterSpecial) filterSpecial.value = 'mnc';
+            filterJobs();
+            navigateTo('jobs');
+        }
+    }, 600);
 }

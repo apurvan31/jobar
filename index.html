@@ -393,14 +393,12 @@
               </select>
             </div>
             <div class="filter-group">
-              <label>Platform</label>
-              <select id="filter-platform" onchange="filterJobs()" class="filter-select">
-                <option value="">All Platforms</option>
-                <option value="linkedin">LinkedIn</option>
-                <option value="indeed">Indeed</option>
-                <option value="naukri">Naukri</option>
-                <option value="wellfound">Wellfound</option>
-                <option value="company">Company Site</option>
+              <label>Special</label>
+              <select id="filter-special" onchange="filterJobs()" class="filter-select">
+                <option value="">All Jobs</option>
+                <option value="walkin">Walk-in Drive ⚡</option>
+                <option value="mnc">Big MNC Careers 🏢</option>
+                <option value="fresher">Freshers Only 🎓</option>
               </select>
             </div>
             <button class="btn-clear" onclick="clearFilters()">Clear</button>
@@ -434,6 +432,76 @@
             <div class="empty-icon">🔍</div>
             <h3>No jobs found</h3>
             <p>Try adjusting your filters or uploading your resume for better matches</p>
+          </div>
+
+          <!-- MNC Careers Section -->
+          <div class="mnc-careers-section glassmorphism animate-in" style="margin-top:2rem; --delay:0.5s">
+            <div class="section-header">
+              <h2>🏢 Top MNC Career Portals</h2>
+              <p style="font-size:0.8rem; color:var(--text-secondary)">Direct access to official job openings for freshers & entry-level</p>
+            </div>
+            <div class="mnc-links-grid">
+              <a href="https://ibegin.tcs.com/iBegin/" target="_blank" class="mnc-link-card">
+                <span class="mnc-logo" style="background:#003087">T</span>
+                <div class="mnc-info">
+                  <span class="mnc-name">TCS iBegin</span>
+                  <span class="mnc-target">Freshers & Experienced</span>
+                </div>
+              </a>
+              <a href="https://careers.infosys.com/graduate" target="_blank" class="mnc-link-card">
+                <span class="mnc-logo" style="background:#007CC2">I</span>
+                <div class="mnc-info">
+                  <span class="mnc-name">Infosys Graduate</span>
+                  <span class="mnc-target">Campus & Off-campus</span>
+                </div>
+              </a>
+              <a href="https://careers.wipro.com/freshers" target="_blank" class="mnc-link-card">
+                <span class="mnc-logo" style="background:#342D6E">W</span>
+                <div class="mnc-info">
+                  <span class="mnc-name">Wipro Careers</span>
+                  <span class="mnc-target">Elite NTHP & Turbo</span>
+                </div>
+              </a>
+              <a href="https://www.cognizant.com/in/en/careers/campus-hiring" target="_blank" class="mnc-link-card">
+                <span class="mnc-logo" style="background:#0033A0">C</span>
+                <div class="mnc-info">
+                  <span class="mnc-name">Cognizant Campus</span>
+                  <span class="mnc-target">GenC & GenC Elevate</span>
+                </div>
+              </a>
+              <a href="https://www.capgemini.com/in-en/careers/jobs-for-freshers-2024/" target="_blank" class="mnc-link-card">
+                <span class="mnc-logo" style="background:#0070AD">C</span>
+                <div class="mnc-info">
+                  <span class="mnc-name">Capgemini</span>
+                  <span class="mnc-target">L1 Hiring 2024/25</span>
+                </div>
+              </a>
+              <a href="https://www.hcltech.com/careers/careers-in-india" target="_blank" class="mnc-link-card">
+                <span class="mnc-logo" style="background:#0076CE">H</span>
+                <div class="mnc-info">
+                  <span class="mnc-name">HCL Tech</span>
+                  <span class="mnc-target">First Career Program</span>
+                </div>
+              </a>
+              <a href="https://www.accenture.com/in-en/careers/jobsearch?jk=freshers" target="_blank" class="mnc-link-card">
+                <span class="mnc-logo" style="background:#A100FF">A</span>
+                <div class="mnc-info">
+                  <span class="mnc-name">Accenture India</span>
+                  <span class="mnc-target">New Associate Roles</span>
+                </div>
+              </a>
+              <a href="https://www.ibm.com/in-en/employment/entry-level/" target="_blank" class="mnc-link-card">
+                <span class="mnc-logo" style="background:#052FAD">IBM</span>
+                <div class="mnc-info">
+                  <span class="mnc-name">IBM Entry Level</span>
+                  <span class="mnc-target">Apprentice & Interns</span>
+                </div>
+              </a>
+            </div>
+            <div class="mnc-search-cta">
+              <p>Looking for more? AI can scan all other MNC career pages for you.</p>
+              <button class="btn-primary" onclick="aiScanMNCCareers()">✨ AI MNC Scan</button>
+            </div>
           </div>
         </div>
 
